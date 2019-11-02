@@ -9,16 +9,12 @@ N = 10000
 board = []
 users = []
 
-@app.route('/')
+@app.route('/', methods=['GET','POST'])
 def hello_world():
     return render_template('client.html')
 
-@socketio.on('create')
-def on_create():
-    print("yooooooo")
-
 @socketio.on('newUser')
-def on_newUser(json, methods=['GET','Post']):
+def on_newUser(json, methods=['GET','POST']):
     users.append(str(json['user_name']))
     print(users)
     socketio.emit('newUserBroadcast', users, broadcast=True)
