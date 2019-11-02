@@ -3,6 +3,7 @@
   <html lang="en">
   <head>
     <title>WHACK</title>
+    <link rel="stylesheet" href="/static/styles.css">
   </head>
   <body>
     
@@ -17,7 +18,8 @@
 
     <script type="text/javascript">
       var socket = io.connect('http://' + document.domain + ':' + location.port);        
-        var form
+        var form;
+        var allUsers;
 
       socket.on( 'connect', function() {
         socket.emit( 'my event', {
@@ -38,9 +40,15 @@
 
       } )
 
+        socket.on('newUserBroadcast', function(users) {
+            console.log(users)
+            allUsers = users;
+            console.log(allUsers)
+        })
+
         socket.on('changeContext' , function() {
             $('.usernameThing').remove();
-
+ 
             let gameCanvas = '<canvas class="gameCanvas"></canvas>';
             let gameScore = '<div class="gameScore">This is the gameScore</canvas>'
 

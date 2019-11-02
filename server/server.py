@@ -1,12 +1,12 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-from flask_cors import CORS
 import eventlet
 
 app = Flask(__name__)
-CORS(app)
 socketio = SocketIO(app)
 
+N = 10000
+board = []
 users = []
 
 @app.route('/')
@@ -21,7 +21,9 @@ def on_create():
 def on_newUser(json, methods=['GET','Post']):
     users.append(str(json['user_name']))
     print(users)
-    socketio.emit('changeContext')
+    socketio.emit('newUserBroadcast', users, broadcast=True)
+    #socketio.emit('changeContext', broadcast=False)
+    socketio.emit('changeContext', broadcast=False)
 
 def messageReceived(methods=['GET', 'POST']):
     print('message was received!!!')
@@ -32,4 +34,10 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
     socketio.emit('my response', json, callback=messageReceived)
 
 if __name__ == '__main__':
+    for i in range(0,N):
+        new = []
+        for j in range(0,N):
+            new.append(0)
+        board.append(new)
+    
     socketio.run(app, debug=True)

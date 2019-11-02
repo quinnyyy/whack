@@ -1,0 +1,24 @@
+.gameCanvas {
+    flex: 0 0 80%;
+}
+
+.gameScore {
+    flex: 1;
+    border: 1 px solid blue;
+}
+
+.wrapper {
+    display: flex;
+    border: 1px solid red;
+}
+
+html {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    margin: 0;
+    height: 100%;
+}
