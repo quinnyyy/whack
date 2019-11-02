@@ -1,21 +1,18 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, make_response
 from flask_socketio import SocketIO
 import eventlet
+import game
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-N = 10000
-board = []
+N = 100
+board = game.Board(N)
 users = []
 
 @app.route('/')
 def hello_world():
     return render_template('client.html')
-
-@socketio.on('create')
-def on_create():
-    print("yooooooo")
 
 @socketio.on('newUser')
 def on_newUser(json, methods=['GET','Post']):
@@ -23,7 +20,7 @@ def on_newUser(json, methods=['GET','Post']):
     print(users)
     socketio.emit('newUserBroadcast', users, broadcast=True)
     #socketio.emit('changeContext', broadcast=False)
-    socketio.emit('changeContext', broadcast=False)
+    socketio.emit('changeContext', make_response(jsonify(board.serialize())), broadcast=False)
 
 def messageReceived(methods=['GET', 'POST']):
     print('message was received!!!')
@@ -34,10 +31,4 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
     socketio.emit('my response', json, callback=messageReceived)
 
 if __name__ == '__main__':
-    for i in range(0,N):
-        new = []
-        for j in range(0,N):
-            new.append(0)
-        board.append(new)
-    
     socketio.run(app, debug=True)

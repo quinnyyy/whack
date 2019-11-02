@@ -46,7 +46,10 @@
             console.log(allUsers)
         })
 
-        socket.on('changeContext' , function() {
+        socket.on('changeContext' , function(board) {
+
+            console.log(board)
+
             $('.usernameThing').remove();
  
             let gameCanvas = '<canvas class="gameCanvas"></canvas>';
