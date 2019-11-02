@@ -41,15 +41,15 @@
       } )
 
         socket.on('newUserBroadcast', function(users) {
-            console.log(users)
             allUsers = users;
             console.log(allUsers)
         })
 
-        socket.on('changeContext' , function(board) {
+        socket.on('changeContext' , function(N,board) {
 
+            console.log("hi")
+            console.log(N)
             console.log(board)
-
             $('.usernameThing').remove();
  
             let gameCanvas = '<canvas class="gameCanvas"></canvas>';

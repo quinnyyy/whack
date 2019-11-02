@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, make_response
 from flask_socketio import SocketIO
 import eventlet
 import game
+import json
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -15,12 +16,14 @@ def hello_world():
     return render_template('client.html')
 
 @socketio.on('newUser')
-def on_newUser(json, methods=['GET','POST']):
-    users.append(str(json['user_name']))
+def on_newUser(payload, methods=['GET','POST']):
+    users.append(str(payload['user_name']))
     print(users)
     socketio.emit('newUserBroadcast', users, broadcast=True)
     #socketio.emit('changeContext', broadcast=False)
-    socketio.emit('changeContext', make_response(jsonify(board.serialize())), broadcast=False)
+
+    socketio.emit('changeContext', board.serialize(), broadcast=False)
+    print("GETTING HERE TOO")
 
 def messageReceived(methods=['GET', 'POST']):
     print('message was received!!!')
