@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Whack</title>
+</head>
+<body>
+  <p>Some sample code to make sure Flask-SocketIO works...</p>
+  <button onclick="createGame()">Create Game</button>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    let url = 'http://127.0.0.1:5000/';
+    var socket = io.connect(url);
+    // verify our websocket connection is established
+    socket.on('connect', function() {
+        console.log('Websocket connected!');
+    });
+    // message handler for the 'join_room' channel
+    socket.on('join_room', function(msg) {
+        console.log(msg);
+    });
+    // createGame onclick - emit a message on the 'create' channel to 
+    // create a new game with default parameters
+    function createGame() {
+      console.log('Creating game...');
+      //socket.emit('create', {size: 'normal', teams: 2, dictionary: 'Simple'});
+    }
+  </script>
+</body>
+</html>
