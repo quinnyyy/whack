@@ -24,6 +24,12 @@
         var board = [[]];
         var N;
 
+        $(window).on("beforeunload", function(evt) {
+
+            evt.preventDefault();
+            socket.disconnect();
+        });
+
         function draw(tile) {
             console.log("hlelo from draw", tile)
         }
@@ -59,7 +65,7 @@
             for (let i = 0; i < payload[0]; i++) {
                 board[i] = [];
                 for (let j = 0; j < payload[0]; j++) {
-                    board[i][j] = payload[N * i + j] + 1
+                    board[i][j] = payload[N * i + j + 1]
                 }
 
             }
