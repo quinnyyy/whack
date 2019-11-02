@@ -21,6 +21,7 @@ def on_create():
 def on_newUser(json, methods=['GET','Post']):
     users.append(str(json['user_name']))
     print(users)
+    socketio.emit('changeContext')
 
 def messageReceived(methods=['GET', 'POST']):
     print('message was received!!!')
