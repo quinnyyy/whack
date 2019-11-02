@@ -17,9 +17,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 
     <script type="text/javascript">
+
       var socket = io.connect('http://' + document.domain + ':' + location.port);        
         var form;
         var allUsers;
+        var board = [[]];
+        var N;
+
+        function draw(tile) {
+            console.log("hlelo from draw", tile)
+        }
 
       socket.on( 'connect', function() {
         socket.emit( 'my event', {
@@ -45,11 +52,23 @@
             console.log(allUsers)
         })
 
-        socket.on('changeContext' , function(N,board) {
+        socket.on('changeContext' , function(payload) {
 
-            console.log("hi")
-            console.log(N)
-            console.log(board)
+            N = payload[0]
+
+            for (let i = 0; i < payload[0]; i++) {
+                board[i] = [];
+                for (let j = 0; j < payload[0]; j++) {
+                    board[i][j] = payload[N * i + j] + 1
+                }
+
+            }
+
+            draw(board[0][0])
+
+            console.log("N:", N)
+            console.log("board:", board)
+            
             $('.usernameThing').remove();
  
             let gameCanvas = '<canvas class="gameCanvas"></canvas>';

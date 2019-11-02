@@ -1,5 +1,6 @@
 .gameCanvas {
     flex: 0 0 80%;
+    border: 1px solid black;
 }
 
 .gameScore {
