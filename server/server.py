@@ -7,13 +7,20 @@ app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app)
 
+users = []
+
 @app.route('/')
 def hello_world():
-    return render_template('test.html')
+    return render_template('client.html')
 
 @socketio.on('create')
 def on_create():
     print("yooooooo")
+
+@socketio.on('newUser')
+def on_newUser(json, methods=['GET','Post']):
+    users.append(str(json['user_name']))
+    print(users)
 
 def messageReceived(methods=['GET', 'POST']):
     print('message was received!!!')
