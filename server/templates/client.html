@@ -25,9 +25,8 @@
         var N;
 
         $(window).on("beforeunload", function(evt) {
-
             evt.preventDefault();
-            socket.disconnect();
+            socket.close();
         });
 
         function draw(tile) {
