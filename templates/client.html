@@ -1,0 +1,166 @@
+
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <title>WHACK</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    
+    <form action="" method="POST">
+      <input type="text" class="username" placeholder="User Name"/>
+      <input type="submit"/>
+    </form>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+
+    <script type="text/javascript">
+
+      var socket = io.connect('http://' + document.domain + ':' + location.port);        
+        var form;
+        var allUsers;
+        var board = [[]];
+        var N;
+        var name;
+        var initialized = false;
+
+        $(window).on("beforeunload", function(evt) {
+            evt.preventDefault();
+            socket.close();
+        });
+
+        document.addEventListener('keydown', function(event) {
+            var input = ""
+            if(event.keyCode == 37) {
+                //left
+                input = "Left"
+            }
+            else if (event.keyCode == 38) {
+                //up
+                input = "Up"
+            }
+            else if(event.keyCode == 39) {
+                //right
+                input = "Right"
+            }
+            else if(event.keyCode == 40) {
+                //down
+                input = "Down"
+            }
+            if (input != "") {
+                socket.emit('buttonPress', {
+                    name: name,
+                    button : input
+                })
+            }
+        });
+
+        function mapColor(type) {
+            if (type == "Blank") {
+                return "#ffffff"
+            } else if (type == "Player") {
+                return "#ff66ff"
+            } else if (type == "Trashcan") {
+                return "#333300"
+            }
+        }
+
+        
+
+        function draw(tile) {
+            let cvs = document.getElementsByClassName("gameCanvas")[0]
+            let ctx = cvs.getContext("2d");
+            ctx.fillStyle = mapColor(tile.Type)
+            //console.log(tile.X, tile.Y)
+            //console.log("hello frmo draw", cvs.offsetWidth)
+            ctx.fillRect(tile.X * 5, tile.Y * 5, 5, 5)
+        }
+
+      socket.on( 'connect', function() {
+        socket.emit( 'my event', {
+          data: 'User Connected'
+        } )
+
+
+        form = $( 'form' ).on( 'submit', function( e ) {
+          e.preventDefault()
+          let user_name = $( 'input.username' ).val()
+          name = user_name;
+          socket.emit( 'newUser', {
+            user_name : user_name,
+          } )
+          $( 'input.message' ).val( '' ).focus()
+        } )
+
+        form.addClass("usernameThing")
+
+      } )
+
+        socket.on('newUserBroadcast', function(users) {
+
+            console.log("SKJDHFKJSDHFJKHSDKJF");
+            $('.gameScore').empty()
+            allUsers = users;
+            for (let key in allUsers) {
+                if (allUsers.hasOwnProperty(key)) {
+                    let user = `<div class="userScore">${key} : ${allUsers[key][2]}</div>`
+                    $('.gameScore').append(user)
+                    console.log(key + " -> " + allUsers[key]);
+                }
+            }
+            console.log(allUsers)
+        })
+
+        socket.on('changeContext' , function(payload) {
+            
+            console.log("CHANGE CONTEXT")
+            N = payload[0]
+
+            for (let i = 0; i < payload[0]; i++) {
+                board[i] = [];
+                for (let j = 0; j < payload[0]; j++) {
+                    board[i][j] = payload[N * i + j + 1]
+                }
+
+            }
+
+            console.log("N:", N)
+            console.log("board:", board)
+            
+            $('.usernameThing').remove();
+ 
+            let gameCanvas = '<canvas width="500" height="500" class="gameCanvas"></canvas>';
+            let gameScore = '<div class="gameScore">This is the gameScore</div>'
+
+            $('body').append(gameCanvas).append(gameScore);
+
+            for (let i = 0; i < payload[0]; i++) {
+                for (let j = 0; j < payload[0]; j++) {
+                    draw(board[i][j]);
+                }
+            }
+        })
+
+        socket.on('updateBoard', function(payload) {
+            console.log(payload)
+            board[payload.oldX][payload.oldY].Type = "Blank"
+            board[payload.oldX][payload.oldY].Name = ""
+            board[payload.X][payload.Y].Type = payload.Type
+            board[payload.X][payload.Y].Name = payload.Name
+            draw(board[payload.X][payload.Y])
+            draw(board[payload.oldX][payload.oldY])
+        })
+
+      socket.on( 'my response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.user_name !== 'undefined' ) {
+          $( 'h3' ).remove()
+          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+        }
+      })
+    </script>
+
+  </body>
+  </html>

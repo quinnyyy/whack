@@ -1,0 +1,23 @@
+.gameCanvas {
+    flex: 0 0 0;
+    border: 1px solid black;
+}
+
+.gameScore {
+    flex: 1;
+    border: 1 px solid blue;
+}
+
+.wrapper {
+    display: flex;
+    border: 1px solid red;
+}
+
+html {
+    margin: 0;
+}
+
+body {
+    display: flex;
+    margin: 0;
+}
