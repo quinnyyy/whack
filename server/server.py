@@ -34,6 +34,7 @@ def test(i, currentX, currentY, direction):
         return
     elif board.Grid[garbageX][garbageY].Type == "Player":
         userLocations[board.Grid[currentX][currentY].Name][2] += 1
+        socketio.emit('newUserBroadcast', userLocations)
         print(userLocations)
         #print(board.Grid[currentX][currentY].Name, board.Grid[garbageX][garbageY].Name)
         return
@@ -86,12 +87,12 @@ def on_newUser(payload, methods=['GET','POST']):
     print(board.Grid[newX][newY].Type)
 
     print(users)
-    socketio.emit('newUserBroadcast', users, broadcast=True)
     #socketio.emit('changeContext', broadcast=False)
 
     print(board.Grid[newX][newY].Type)
 
     socketio.emit('changeContext', board.serialize(), broadcast=False)
+    socketio.emit('newUserBroadcast', userLocations)
     print("GETTING HERE TOO")
 
 @socketio.on('buttonPress')

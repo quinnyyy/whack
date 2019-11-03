@@ -98,7 +98,17 @@
       } )
 
         socket.on('newUserBroadcast', function(users) {
+
+            console.log("SKJDHFKJSDHFJKHSDKJF");
+            $('.gameScore').empty()
             allUsers = users;
+            for (let key in allUsers) {
+                if (allUsers.hasOwnProperty(key)) {
+                    let user = `<div class="userScore">${key} : ${allUsers[key][2]}</div>`
+                    $('.gameScore').append(user)
+                    console.log(key + " -> " + allUsers[key]);
+                }
+            }
             console.log(allUsers)
         })
 
@@ -120,7 +130,7 @@
             $('.usernameThing').remove();
  
             let gameCanvas = '<canvas width="500" height="500" class="gameCanvas"></canvas>';
-            let gameScore = '<div class="gameScore">This is the gameScore</canvas>'
+            let gameScore = '<div class="gameScore">This is the gameScore</div>'
 
             $('body').append(gameCanvas).append(gameScore);
 
