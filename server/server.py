@@ -4,6 +4,7 @@ import eventlet
 import game
 import json
 import random
+import math
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -46,4 +47,12 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
     socketio.emit('my response', json, callback=messageReceived)
 
 if __name__ == '__main__':
+    #python not js lmao
+    for ii in range(0,N):
+        for jj in range(0,N):
+            if random.randint(0,N*N) % (50) == 0 and board.Grid[ii][jj].Type == "Blank":
+                print("name jeff")
+                board.Grid[ii][jj].Type = "Trashcan"
+
     socketio.run(app, debug=True,port = 5000, host = '0.0.0.0')
+    
