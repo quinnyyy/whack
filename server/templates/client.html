@@ -29,8 +29,41 @@
             socket.close();
         });
 
+        document.addEventListener('keydown', function(event) {
+            if(event.keyCode == 37) {
+                //left
+                alert('Left was pressed');
+            }
+            else if (event.keyCode == 38) {
+                //up
+                alert("hello1")
+            }
+            else if(event.keyCode == 39) {
+                //right
+                alert('Right was pressed');
+            }
+            else if(event.keyCode == 40) {
+                //down
+                alert ("hello2")
+            }
+        });
+
+        function mapColor(type) {
+            if (type == "Blank") {
+                return "#ff66ff"
+            }
+        }
+
+        
+
         function draw(tile) {
-            console.log("hlelo from draw", tile)
+            let cvs = document.getElementsByClassName("gameCanvas")[0]
+            console.log(cvs)
+            let ctx = cvs.getContext("2d");
+            ctx.fillStyle = mapColor(tile.Type)
+            console.log(tile.X, tile.Y)
+            //console.log("hello frmo draw", cvs.offsetWidth)
+            ctx.fillRect(tile.X * 5, tile.Y * 5, 5, 5)
         }
 
       socket.on( 'connect', function() {
@@ -69,17 +102,20 @@
 
             }
 
-            draw(board[0][0])
-
             console.log("N:", N)
             console.log("board:", board)
             
             $('.usernameThing').remove();
  
-            let gameCanvas = '<canvas class="gameCanvas"></canvas>';
+            let gameCanvas = '<canvas width="500" height="500" class="gameCanvas"></canvas>';
             let gameScore = '<div class="gameScore">This is the gameScore</canvas>'
 
             $('body').append(gameCanvas).append(gameScore);
+
+            draw(board[0][0])
+            draw(board[23][67])
+            draw(board[86][89])
+            draw(board[99][99])
         })
 
       socket.on( 'my response', function( msg ) {
