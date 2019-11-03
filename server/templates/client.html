@@ -122,7 +122,12 @@
             allUsers = users;
             for (let key in allUsers) {
                 if (allUsers.hasOwnProperty(key)) {
-                    let user = `<div class="userScore">${key} : ${allUsers[key][2]}, ${allUsers[key][3]}</div>`
+                    let user
+                    if (allUsers[key][3] == 0) {
+                        user = `<div style="color:red" class="userScore">${key} : ${allUsers[key][2]}, ${allUsers[key][3]}</div>`
+                    } else {
+                        user = `<div class="userScore">${key} : ${allUsers[key][2]}, ${allUsers[key][3]}</div>`
+                    }
                     $('.gameScore').append(user)
                     console.log(key + " -> " + allUsers[key]);
                 }
