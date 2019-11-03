@@ -28,7 +28,7 @@ class Board:
                 newTile = Tile(i,j)
                 new.append(newTile)
             grid.append(new)
-            
+
         self.Grid = grid
 
     def updateGrid(self, X, Y, T):
@@ -39,7 +39,8 @@ class Board:
         test.append(self.N)
         for i in range(0,self.N):
             for j in range(0,self.N):
-                newTile = Tile(i,j).serialize()
+                #newTile = Tile(i,j).serialize()
+                newTile = self.Grid[i][j].serialize()
                 test.append(newTile)
 
         return test

@@ -60,8 +60,7 @@
             if (type == "Blank") {
                 return "#ffffff"
             } else if (type == "Player") {
-                console.log("yeet")
-                return "#000000"
+                return "#ff66ff"
             }
         }
 
@@ -71,7 +70,7 @@
             let cvs = document.getElementsByClassName("gameCanvas")[0]
             let ctx = cvs.getContext("2d");
             ctx.fillStyle = mapColor(tile.Type)
-            console.log(tile.X, tile.Y)
+            //console.log(tile.X, tile.Y)
             //console.log("hello frmo draw", cvs.offsetWidth)
             ctx.fillRect(tile.X * 5, tile.Y * 5, 5, 5)
         }
@@ -128,6 +127,16 @@
                     draw(board[i][j]);
                 }
             }
+        })
+
+        socket.on('updateBoard', function(payload) {
+            console.log(payload)
+            board[payload.oldX][payload.oldY].Type = "Blank"
+            board[payload.oldX][payload.oldY].Name = ""
+            board[payload.X][payload.Y].Type = payload.Type
+            board[payload.X][payload.Y].Name = payload.Name
+            draw(board[payload.X][payload.Y])
+            draw(board[payload.oldX][payload.oldY])
         })
 
       socket.on( 'my response', function( msg ) {

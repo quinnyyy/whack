@@ -15,11 +15,9 @@
 
 html {
     margin: 0;
-    height: 100%;
 }
 
 body {
     display: flex;
     margin: 0;
-    height: 100%;
 }
