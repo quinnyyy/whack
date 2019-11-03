@@ -23,6 +23,7 @@
         var allUsers;
         var board = [[]];
         var N;
+        var name;
 
         $(window).on("beforeunload", function(evt) {
             evt.preventDefault();
@@ -30,27 +31,37 @@
         });
 
         document.addEventListener('keydown', function(event) {
+            var input = ""
             if(event.keyCode == 37) {
                 //left
-                alert('Left was pressed');
+                input = "Left"
             }
             else if (event.keyCode == 38) {
                 //up
-                alert("hello1")
+                input = "Up"
             }
             else if(event.keyCode == 39) {
                 //right
-                alert('Right was pressed');
+                input = "Right"
             }
             else if(event.keyCode == 40) {
                 //down
-                alert ("hello2")
+                input = "Down"
+            }
+            if (input != "") {
+                socket.emit('buttonPress', {
+                    name: name,
+                    button : input
+                })
             }
         });
 
         function mapColor(type) {
             if (type == "Blank") {
-                return "#ff66ff"
+                return "#ffffff"
+            } else if (type == "Player") {
+                console.log("yeet")
+                return "#000000"
             }
         }
 
@@ -58,7 +69,6 @@
 
         function draw(tile) {
             let cvs = document.getElementsByClassName("gameCanvas")[0]
-            console.log(cvs)
             let ctx = cvs.getContext("2d");
             ctx.fillStyle = mapColor(tile.Type)
             console.log(tile.X, tile.Y)
@@ -75,6 +85,7 @@
         form = $( 'form' ).on( 'submit', function( e ) {
           e.preventDefault()
           let user_name = $( 'input.username' ).val()
+          name = user_name;
           socket.emit( 'newUser', {
             user_name : user_name,
           } )
@@ -112,10 +123,11 @@
 
             $('body').append(gameCanvas).append(gameScore);
 
-            draw(board[0][0])
-            draw(board[23][67])
-            draw(board[86][89])
-            draw(board[99][99])
+            for (let i = 0; i < payload[0]; i++) {
+                for (let j = 0; j < payload[0]; j++) {
+                    draw(board[i][j]);
+                }
+            }
         })
 
       socket.on( 'my response', function( msg ) {

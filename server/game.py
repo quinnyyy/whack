@@ -28,7 +28,11 @@ class Board:
                 newTile = Tile(i,j)
                 new.append(newTile)
             grid.append(new)
+            
         self.Grid = grid
+
+    def updateGrid(self, X, Y, T):
+        self.Grid[X][Y] = T
 
     def serialize(self):
         test = []
