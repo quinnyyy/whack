@@ -33,8 +33,21 @@ def test(i, currentX, currentY, direction):
         board.Grid[garbageX][garbageY].Name = ""
         return
     elif board.Grid[garbageX][garbageY].Type == "Player":
+        oldname = board.Grid[garbageX][garbageY].Name
         userLocations[board.Grid[currentX][currentY].Name][2] += 1
+        userLocations[board.Grid[garbageX][garbageY].Name][3] -= 1
+        if userLocations[board.Grid[garbageX][garbageY].Name][3] <= 0:
+            print("asdfasdfasdfasdf")
+            tile = game.Tile(garbageX,garbageY)
+            board.updateGrid(garbageX, garbageY, tile)
+            obj = board.Grid[garbageX][garbageY].serialize()
+            obj['oldX'] = garbageX
+            obj['oldY'] = garbageY
+            socketio.emit('loser', oldname, broadcast=True)
+            socketio.emit('updateBoard', obj, broadcast=True)
+
         socketio.emit('newUserBroadcast', userLocations)
+
         print(userLocations)
         #print(board.Grid[currentX][currentY].Name, board.Grid[garbageX][garbageY].Name)
         return
@@ -79,9 +92,14 @@ def on_newUser(payload, methods=['GET','POST']):
     users.append(str(payload['user_name']))
     newX = random.randint(0,N)
     newY = random.randint(0,N)
+    print(len(board.Grid))
+    while board.Grid[newX][newY].Type != "Blank":
+        newX = random.randint(0,N)
+        newY = random.randint(0,N)
+
     newTile = game.Tile(newX, newY, "Player", name=payload['user_name'])
     board.updateGrid(newX, newY, newTile)
-    userLocations[payload['user_name']] = [newX, newY, 0]
+    userLocations[payload['user_name']] = [newX, newY, 0, 3]
 
     print(newX, newY)
     print(board.Grid[newX][newY].Type)

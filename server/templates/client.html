@@ -2,7 +2,7 @@
   <!DOCTYPE html>
   <html lang="en">
   <head>
-    <title>WHACK</title>
+    <title>WHACKER</title>
     <link rel="stylesheet" href="/static/styles.css">
   </head>
   <body>
@@ -26,12 +26,7 @@
         var name;
         var initialized = false;
 
-        $(window).on("beforeunload", function(evt) {
-            evt.preventDefault();
-            socket.close();
-        });
-
-        document.addEventListener('keydown', function(event) {
+        function sendButton(event) {
             var input = ""
             if(event.keyCode == 37) {
                 //left
@@ -55,15 +50,26 @@
                     button : input
                 })
             }
+        }
+
+        $(window).on("beforeunload", function(evt) {
+            evt.preventDefault();
+            socket.close();
         });
 
-        function mapColor(type) {
+        document.addEventListener('keydown', sendButton);
+
+        function mapColor(type, isMe) {
             if (type == "Blank") {
                 return "#ffffff"
             } else if (type == "Player") {
-                return "#ff66ff"
+                if (isMe) {
+                    return "#ff66ff"
+                } else {
+                    return "#0000ff"
+                }
             } else if (type == "Trashcan") {
-                return "#333300"
+                return "#006600"
             }
         }
 
@@ -72,11 +78,22 @@
         function draw(tile) {
             let cvs = document.getElementsByClassName("gameCanvas")[0]
             let ctx = cvs.getContext("2d");
-            ctx.fillStyle = mapColor(tile.Type)
+            if (tile.Name == name) {
+                ctx.fillStyle = mapColor(tile.Type, true)
+            } else {
+                ctx.fillStyle = mapColor(tile.Type, false)
+            }
             //console.log(tile.X, tile.Y)
             //console.log("hello frmo draw", cvs.offsetWidth)
             ctx.fillRect(tile.X * 5, tile.Y * 5, 5, 5)
         }
+
+        socket.on('loser', function(n) {
+            if (n == name) {
+                console.log("remove")
+                document.removeEventListener('keydown', sendButton)
+            }
+        })
 
       socket.on( 'connect', function() {
         socket.emit( 'my event', {
@@ -105,7 +122,7 @@
             allUsers = users;
             for (let key in allUsers) {
                 if (allUsers.hasOwnProperty(key)) {
-                    let user = `<div class="userScore">${key} : ${allUsers[key][2]}</div>`
+                    let user = `<div class="userScore">${key} : ${allUsers[key][2]}, ${allUsers[key][3]}</div>`
                     $('.gameScore').append(user)
                     console.log(key + " -> " + allUsers[key]);
                 }
@@ -114,7 +131,7 @@
         })
 
         socket.on('changeContext' , function(payload) {
-            
+
             console.log("CHANGE CONTEXT")
             N = payload[0]
 
