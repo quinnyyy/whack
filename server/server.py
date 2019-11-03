@@ -109,7 +109,7 @@ def on_newUser(payload, methods=['GET','POST']):
 
     print(board.Grid[newX][newY].Type)
 
-    socketio.emit('changeContext', board.serialize(), broadcast=False)
+    socketio.emit('changeContext', [payload['user_name'], board.serialize()], broadcast=False)
     socketio.emit('newUserBroadcast', userLocations, broadcast=True)
     print("GETTING HERE TOO")
 

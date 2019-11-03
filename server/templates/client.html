@@ -130,9 +130,18 @@
             console.log(allUsers)
         })
 
-        socket.on('changeContext' , function(payload) {
+
+        socket.on('changeContext' , function(test) {
+
+            console.log(($('.gameCanvas')).length)
+            console.log(test[0])
+
+            if (($('.gameCanvas')).length > 0 || test[0] != name) {
+                return
+            }
 
             console.log("CHANGE CONTEXT")
+            let payload = test[1]
             N = payload[0]
 
             for (let i = 0; i < payload[0]; i++) {
