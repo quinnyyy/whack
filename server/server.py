@@ -30,8 +30,15 @@ def test(i, currentX, currentY, direction):
         garbageX = garbageX - 1
 
     if garbageX >= N or garbageX < 0 or garbageY >= N or garbageY < 0:
+        board.Grid[garbageX][garbageY].Name = ""
+        return
+    elif board.Grid[garbageX][garbageY].Type == "Player":
+        userLocations[board.Grid[currentX][currentY].Name][2] += 1
+        print(userLocations)
+        #print(board.Grid[currentX][currentY].Name, board.Grid[garbageX][garbageY].Name)
         return
     elif board.Grid[garbageX][garbageY].Type != "Blank":
+        board.Grid[garbageX][garbageY].Name = ""
         return
     else:
         board.Grid[currentX][currentY].X = garbageX
@@ -51,12 +58,15 @@ def test(i, currentX, currentY, direction):
         if i + 1 < 10:
             print("yooo")
             #threading.Timer(.5, lambda: print("hello")).start()
-            eventlet.sleep(.1)
+            eventlet.sleep(.05)
             test(i+1, garbageX, garbageY, direction)
             #t = threading.Timer(.5, test, [i+1, garbageX, garbageY, direction])
             #t.start()
             #t.join()
             print("yo#2")
+        else:
+            board.Grid[garbageX][garbageY].Name = ""
+            
 
 
 @app.route('/', methods=['GET','POST'])
@@ -70,7 +80,7 @@ def on_newUser(payload, methods=['GET','POST']):
     newY = random.randint(0,N)
     newTile = game.Tile(newX, newY, "Player", name=payload['user_name'])
     board.updateGrid(newX, newY, newTile)
-    userLocations[payload['user_name']] = [newX, newY]
+    userLocations[payload['user_name']] = [newX, newY, 0]
 
     print(newX, newY)
     print(board.Grid[newX][newY].Type)
@@ -108,6 +118,7 @@ def on_button(payload, methods=['GET','POST']):
         #garbageX = newX
         #garbageY = newY
         #count = 0
+        board.Grid[newX][newY].Name = payload['name']
         test(0, newX, newY, direction)
         """
         for i in range(0,10):
