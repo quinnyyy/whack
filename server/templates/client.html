@@ -24,6 +24,7 @@
         var board = [[]];
         var N;
         var name;
+        var initialized = false;
 
         $(window).on("beforeunload", function(evt) {
             evt.preventDefault();
@@ -113,7 +114,8 @@
         })
 
         socket.on('changeContext' , function(payload) {
-
+            
+            console.log("CHANGE CONTEXT")
             N = payload[0]
 
             for (let i = 0; i < payload[0]; i++) {

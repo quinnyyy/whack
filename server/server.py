@@ -92,7 +92,7 @@ def on_newUser(payload, methods=['GET','POST']):
     print(board.Grid[newX][newY].Type)
 
     socketio.emit('changeContext', board.serialize(), broadcast=False)
-    socketio.emit('newUserBroadcast', userLocations)
+    socketio.emit('newUserBroadcast', userLocations, broadcast=True)
     print("GETTING HERE TOO")
 
 @socketio.on('buttonPress')
@@ -113,6 +113,8 @@ def on_button(payload, methods=['GET','POST']):
         newX = currentX - 1
 
     if newX >= N or newX < 0 or newY >= N or newY < 0:
+        return
+    elif board.Grid[newX][newY].Type == "Player":
         return
     elif board.Grid[newX][newY].Type == "Trashcan":
         print("asdkjfhaksjdhfkjasdhfjkashfjk")
