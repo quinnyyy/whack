@@ -5,6 +5,7 @@ import game
 import json
 import random
 import math
+import threading
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -14,6 +15,49 @@ board = game.Board(N)
 users = []
 
 userLocations = {}
+
+def test(i, currentX, currentY, direction):
+    print("HELLO!!!")
+    garbageX = currentX
+    garbageY = currentY
+    if direction == "Up":
+        garbageY = garbageY - 1
+    elif direction == "Down":
+        garbageY = garbageY + 1
+    elif direction == "Right":
+        garbageX = garbageX + 1
+    elif direction == "Left":
+        garbageX = garbageX - 1
+
+    if garbageX >= N or garbageX < 0 or garbageY >= N or garbageY < 0:
+        return
+    elif board.Grid[garbageX][garbageY].Type != "Blank":
+        return
+    else:
+        board.Grid[currentX][currentY].X = garbageX
+        board.Grid[currentX][currentY].Y = garbageY
+
+        board.updateGrid(garbageX, garbageY, board.Grid[currentX][currentY])
+        blank = game.Tile(currentX, currentY)
+        board.updateGrid(currentX, currentY, blank)
+
+        obj = board.Grid[garbageX][garbageY].serialize()
+        obj['oldX'] = currentX
+        obj['oldY'] = currentY
+        #print("yooo")
+        print(currentX, currentY)
+        socketio.emit('updateBoard', obj, broadcast=True)
+
+        if i + 1 < 10:
+            print("yooo")
+            #threading.Timer(.5, lambda: print("hello")).start()
+            eventlet.sleep(.1)
+            test(i+1, garbageX, garbageY, direction)
+            #t = threading.Timer(.5, test, [i+1, garbageX, garbageY, direction])
+            #t.start()
+            #t.join()
+            print("yo#2")
+
 
 @app.route('/', methods=['GET','POST'])
 def hello_world():
@@ -58,6 +102,47 @@ def on_button(payload, methods=['GET','POST']):
         newX = currentX - 1
 
     if newX >= N or newX < 0 or newY >= N or newY < 0:
+        return
+    elif board.Grid[newX][newY].Type == "Trashcan":
+        print("asdkjfhaksjdhfkjasdhfjkashfjk")
+        #garbageX = newX
+        #garbageY = newY
+        #count = 0
+        test(0, newX, newY, direction)
+        """
+        for i in range(0,10):
+            currentX2 = garbageX
+            currentY2 = garbageY
+            if direction == "Up":
+                garbageY = garbageY - 1
+            elif direction == "Down":
+                garbageY = garbageY + 1
+            elif direction == "Right":
+                garbageX = garbageX + 1
+            elif direction == "Left":
+                garbageX = garbageX - 1
+
+            if garbageX >= N or garbageX < 0 or garbageY >= N or garbageY < 0:
+                return
+            elif board.Grid[garbageX][garbageY].Type != "Blank":
+                # add player collision check here later
+                return
+            else:
+                board.Grid[currentX2][currentY2].X = garbageX
+                board.Grid[currentX2][currentY2].Y = garbageY
+
+                board.updateGrid(garbageX, garbageY, board.Grid[currentX2][currentY2])
+                blank = game.Tile(currentX2, currentY2)
+                board.updateGrid(currentX2, currentY2, blank)
+
+                obj = board.Grid[garbageX][garbageY].serialize()
+                obj['oldX'] = currentX2
+                obj['oldY'] = currentY2
+                #count += 1
+                #print("yooo")
+                socketio.emit('updateBoard', obj, broadcast=True)
+
+        """
         return
 
     board.Grid[currentX][currentY].X = newX
