@@ -27,7 +27,7 @@ We learned about socket programming and EC2 and Apache
 We are going to put ads and become millionaires
 
 ## Tech Stack
-Built with AWS EC2, Apache2, Javascript and Python
+Built with AWS EC2, Apache2, Javascript and Python (Flask)
 
 ## Links
 
