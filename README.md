@@ -1,5 +1,5 @@
 # Whack (Built for Wellsley Hacks)
-# An online multiplayer block pushing game
+**An online multiplayer block pushing game**
 
 ## Inspiration
 We wanted to make a .io style game (think agar.io). At first we couldn't think of any ideas but then we spotted a wheeled trash can across the venue and we knew that we wanted to make a game where you push trash cans into other people to kill them.
