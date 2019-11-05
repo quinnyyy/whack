@@ -2,7 +2,7 @@
 **An online multiplayer block pushing game**
 
 ## Inspiration
-We wanted to make a .io style game (think agar.io). At first we couldn't think of any ideas but then we spotted a wheeled trash can across the venue and we knew that we wanted to make a game where you push trash cans into other people to kill them.
+We wanted to make a .io style game (think agar.io). At first we couldn't think of any ideas but then we spotted a wheeled trash can across the venue and we knew that we wanted to make a game where you push trash cans into other people to score points and deal damage.
 
 ## What it does
 You play in a 2D map against other players. Trash cans are randomly spawned and you can push them into other players. You get points when hitting others.
